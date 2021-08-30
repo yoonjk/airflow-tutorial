@@ -1,15 +1,27 @@
-from datetime import datetime
+from datetime import timedelta
 from airflow import DAG
-from airflow.operators.dummy_operator import DummyOperator
-from airflow.operators.python_operator import PythonOperator
+from airflow.operators.bash import BashOperator
+from airflow.utils.dates import days_ago
 
-def print_hello():
-    return 'Hello world from first Airflow DAG!'
+args = {
+    'owner': 'admin',
+}
 
-dag = DAG('hello_world', description='Hello World DAG',
-          schedule_interval='0 12 * * *',
-          start_date=datetime(2017, 3, 20), catchup=False)
+dag = DAG(
+    dag_id='demo_test',
+    default_args=args,
+    start_date=days_ago(2),
+    dagrun_timeout=timedelta(minutes=1),
+    schedule_interval='0 1 * * *',
+)
 
-hello_operator = PythonOperator(task_id='hello_task', python_callable=print_hello, dag=dag)
+templated_command = """
+$HOME/airflow/make_csv.sh
+"""
 
-hello_operator
+# [START howto_operator_bash]
+run_this = BashOperator(
+    task_id='bash_test',
+    bash_command=templated_command,
+    dag=dag,
+)
