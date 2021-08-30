@@ -15,6 +15,7 @@ templated_command = """
     echo "ds : {{ ds }}"
 	echo "ds_nodash : {{ ds_nodash }}"
 	echo "prev_ds_nodash : {{ prev_ds_nodash }}"
+	echo "EXECUTE_PATH : ${EXECUTE_PATH}"
     """
     
 dag = DAG(
