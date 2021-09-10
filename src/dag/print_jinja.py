@@ -10,7 +10,7 @@ local_tz = pendulum.timezone("Asia/Seoul")
 
 default_args= {
     'start_date': days_ago(1),
-    'retries': 0,
+    'retries': 3,
     'catchup': False,
     'retry_delay': timedelta(minutes=5),
 }
@@ -42,7 +42,7 @@ def templated_test(d1):
 dag = DAG(
         'print_jinja', 
         default_args=default_args, 
-        schedule_interval="@daily",
+        schedule_interval="*/5 * * * *",
 )
 
 t1 = BashOperator(
